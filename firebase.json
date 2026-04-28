@@ -1,0 +1,20 @@
+{
+  "hosting": {
+    "site": "gen-lang-client-0802401297",
+    "public": "dist",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "run": {
+          "serviceId": "grantprix",
+          "region": "us-west1"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-space-bg: #12181F;
+  --color-space-card: #1C252E;
+  --color-space-border: #2D3748;
+  --color-lime-accent: #C1FF72;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-space-bg text-white font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-sans font-bold uppercase tracking-wider;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10;
+  }
+  
+  .glass-morphism {
+    @apply bg-white/5 backdrop-blur-md border border-white/10 rounded-[16px];
+  }
+  
+  .bento-card {
+    @apply bg-space-card border border-space-border rounded-[16px] p-4 md:p-6 transition-all duration-300 hover:scale-[1.02] hover:border-lime-accent/50 hover:shadow-[0_0_20px_rgba(193,255,114,0.1)];
+  }
+
+  .btn-lime {
+    @apply bg-lime-accent text-space-bg font-bold py-3 md:py-4 px-6 md:px-8 rounded-[16px] transition-all hover:shadow-[0_0_30px_rgba(193,255,114,0.4)] active:scale-95 uppercase tracking-widest text-xs md:text-sm text-center;
+  }
+
+  .progress-bar {
+    @apply h-2 bg-space-border rounded-full overflow-hidden;
+  }
+
+  .progress-fill {
+    @apply h-full bg-lime-accent transition-all duration-1000;
+  }
+}
+
+.display-text {
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #12181F;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2D3748;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #C1FF72;
+}

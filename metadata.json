@@ -1,0 +1,5 @@
+{
+  "name": "GrantPrix",
+  "description": "A platform to discover tech conferences with travel grants, scholarships, and funding opportunities for underrepresented groups.",
+  "requestFramePermissions": ["geolocation"]
+}

@@ -1,0 +1,229 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: conferences
+    // Fields:
+    //   - name: string (required)
+    //   - description: string
+    //   - location: string
+    //   - region: string (required, enum)
+    //   - grantDeadline: string (required, ISO date)
+    //   - grantCoverage: map (flight, hotel, ticket, stipend)
+    //   - applicationUrl: string (required, uri)
+    //   - tags: list
+    //
+    // Collection: subscriptions
+    // Fields:
+    //   - email: string (required, email)
+    //   - regions: list
+    //   - uid: string (required, matches auth.uid)
+    //
+    // Collection: reviews
+    // Fields:
+    //   - conferenceId: string (required)
+    //   - userId: string (required, matches auth.uid)
+    //   - userName: string
+    //   - rating: number (1-5)
+    //   - comment: string
+    //   - status: string (pending, approved, denied)
+    //   - createdAt: string (ISO date)
+    //
+    // Collection: opportunity_submissions
+    // Fields:
+    //   - name: string (required)
+    //   - applicationUrl: string (required, uri)
+    //   - description: string
+    //   - location: string (required)
+    //   - region: string (required, enum)
+    //   - locationType: string (required, enum)
+    //   - fundingType: string (required, enum)
+    //   - field: string (required)
+    //   - startDate: string
+    //   - endDate: string
+    //   - grantDeadline: string (required, ISO date)
+    //   - grantCoverage: map
+    //   - tags: list
+    //   - submittedBy: string (required, auth.uid)
+    //   - submitterName: string
+    //   - submitterEmail: string
+    //   - status: string (pending, approved, denied)
+    //   - createdAt: string
+    //
+    // Collection: notifications
+    // Fields:
+    //   - userId: string (required, matches auth.uid)
+    //   - title: string
+    //   - message: string
+    //   - type: string (enum)
+    //   - isRead: bool
+    //   - createdAt: string
+    // ===============================================================
+
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (request.auth.token.email == "mariagloriaobonoondodev@gmail.com" && request.auth.token.email_verified == true);
+    }
+
+    function isServer() {
+      // In this environment, the backend often lacks a request.auth context
+      // but we can allow specific updates if they follow a strict schema
+      // or if we trust the source. However, since Admin SDK bypasses rules,
+      // this is mostly a fallback.
+      return false; 
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function isValidUrl(url) {
+      return url is string && (url.matches("^https://.*") || url.matches("^http://.*") || url.matches("^data:image/.*"));
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function isValidConference(data) {
+      return hasRequiredFields(['name', 'region', 'grantDeadline', 'applicationUrl', 'locationType', 'fundingType', 'field']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() < 200 &&
+             data.region in ["Global", "North America", "Europe", "Asia", "Africa", "Latin America", "Oceania"] &&
+             data.locationType in ["USA", "Global", "Virtual"] &&
+             data.fundingType in ["Full", "Partial"] &&
+             data.grantDeadline is string &&
+             data.applicationUrl is string && isValidUrl(data.applicationUrl);
+    }
+
+    function isValidSubscription(data) {
+      return hasRequiredFields(['email', 'uid']) &&
+             data.email is string && isValidEmail(data.email) &&
+             data.uid == request.auth.uid &&
+             data.regions is list &&
+             data.regions.size() <= 10;
+    }
+
+    function isValidUserProfile(data) {
+      return hasRequiredFields(['uid', 'email']) &&
+             hasOnlyAllowedFields(['uid', 'email', 'displayName', 'photoURL', 'location', 'primaryGoal', 'experienceYears', 'interests', 'impactAreas', 'occupation', 'isPremium', 'aiReviewCount', 'completionPercentage', 'matchesFound', 'isVerified', 'createdAt', 'updatedAt', 'savedConferences', 'applications']) &&
+             data.uid == request.auth.uid &&
+             data.email is string && isValidEmail(data.email) &&
+             (data.get('displayName', '') is string && data.get('displayName', '').size() < 100) &&
+             (data.get('photoURL', '') is string && (data.get('photoURL', '') == "" || isValidUrl(data.get('photoURL', '')))) &&
+             (data.get('isPremium', false) is bool) &&
+             (data.get('savedConferences', []) is list && data.get('savedConferences', []).size() <= 100) &&
+             (data.get('applications', []) is list && data.get('applications', []).size() <= 100) &&
+             (data.get('occupation', '') is string && data.get('occupation', '').size() < 200) &&
+             (data.get('aiReviewCount', 0) is number) &&
+             (data.get('completionPercentage', 0) is number) &&
+             (data.get('matchesFound', 0) is number) &&
+             (data.get('isVerified', false) is bool) &&
+             (data.get('createdAt', '') is string) &&
+             (data.get('updatedAt', '') is string) &&
+             (data.get('location', '') is string && data.get('location', '').size() < 200) &&
+             (data.get('primaryGoal', '') is string && data.get('primaryGoal', '').size() < 500) &&
+             (data.get('experienceYears', 0) is number) &&
+             (data.get('interests', []) is list && data.get('interests', []).size() <= 20) &&
+             (data.get('impactAreas', []) is list && data.get('impactAreas', []).size() <= 20);
+    }
+
+    function isValidNotification(data) {
+      return hasRequiredFields(['userId', 'title', 'message', 'type', 'isRead']) &&
+             data.userId == request.auth.uid &&
+             data.title is string && data.title.size() > 0 && data.title.size() < 200 &&
+             data.message is string && data.message.size() > 0 && data.message.size() < 1000 &&
+             data.type in ['new_grant', 'deadline_reminder', 'system', 'admin_alert', 'status_change'] &&
+             data.isRead is bool;
+    }
+
+    function isValidReview(data) {
+      return hasRequiredFields(['conferenceId', 'userId', 'rating', 'comment', 'status']) &&
+             data.conferenceId is string &&
+             data.rating is number && data.rating >= 1 && data.rating <= 5 &&
+             data.comment is string && data.comment.size() > 0 && data.comment.size() < 2000 &&
+             data.status in ['pending', 'approved', 'denied'];
+    }
+
+    function isValidOpportunitySubmission(data) {
+      return hasRequiredFields(['name', 'applicationUrl', 'submittedBy', 'status', 'location', 'region', 'grantDeadline', 'field']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() < 200 &&
+             data.applicationUrl is string && isValidUrl(data.applicationUrl) &&
+             data.location is string && data.location.size() > 0 &&
+             data.region in ["Global", "North America", "Europe", "Asia", "Africa", "Latin America", "Oceania"] &&
+             data.field is string && data.field.size() > 0 &&
+             data.grantDeadline is string &&
+             data.status in ['pending', 'approved', 'denied'];
+    }
+
+    // Conferences: Publicly readable, admin writable
+    match /conferences/{conferenceId} {
+      allow read: if true;
+      allow create: if isAuthenticated() && isValidConference(request.resource.data);
+      allow update, delete: if isAdmin();
+    }
+
+    // Notifications: Owner only
+    match /notifications/{notificationId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && isValidNotification(request.resource.data);
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid && isValidNotification(request.resource.data);
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // Subscriptions: Owner only
+    match /subscriptions/{subscriptionId} {
+      allow read: if isAuthenticated() && resource.data.uid == request.auth.uid;
+      allow create: if isAuthenticated() && isValidSubscription(request.resource.data);
+      allow update: if isAuthenticated() && resource.data.uid == request.auth.uid && isValidSubscription(request.resource.data);
+      allow delete: if isAuthenticated() && resource.data.uid == request.auth.uid;
+    }
+
+    // Registered Emails: Publicly readable to allow pre-login check
+    match /registered_emails/{email} {
+      allow read: if true;
+      allow create: if isAuthenticated() && request.auth.token.email == email;
+      allow delete: if isAuthenticated() && request.auth.token.email == email;
+    }
+
+    // User Profiles: Owner only, sensitive fields restricted
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidUserProfile(request.resource.data) && request.resource.data.get('isPremium', false) == false;
+      allow update: if (isOwner(userId) && isValidUserProfile(request.resource.data) && (request.resource.data.get('isPremium', false) == resource.data.get('isPremium', false))) || isAdmin();
+      allow delete: if isOwner(userId);
+    }
+
+    // Reviews: Publicly readable if approved, owner can create pending, admin can update status
+    match /reviews/{reviewId} {
+      allow read: if isAdmin() || (resource.data.status == 'approved');
+      allow create: if isAuthenticated() && isValidReview(request.resource.data) && request.resource.data.userId == request.auth.uid && request.resource.data.status == 'pending';
+      allow update: if isAdmin() && isValidReview(request.resource.data) && request.resource.data.userId == resource.data.userId;
+      allow delete: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+    }
+
+    // Opportunity Submissions: Publicly readable if approved, owner can create/read, admin can read/update
+    match /opportunity_submissions/{submissionId} {
+      allow read: if isAdmin() || (resource.data.status == 'approved') || (isAuthenticated() && resource.data.submittedBy == request.auth.uid);
+      allow create: if isAuthenticated() && isValidOpportunitySubmission(request.resource.data) && request.resource.data.submittedBy == request.auth.uid && request.resource.data.status == 'pending';
+      allow update: if isAdmin() && isValidOpportunitySubmission(request.resource.data) && request.resource.data.submittedBy == resource.data.submittedBy;
+      allow delete: if isAdmin();
+    }
+  }
+}

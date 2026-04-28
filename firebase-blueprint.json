@@ -1,0 +1,177 @@
+{
+  "entities": {
+    "Conference": {
+      "title": "Conference",
+      "description": "A tech conference with funding opportunities.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Name of the conference" },
+        "description": { "type": "string", "description": "Brief overview" },
+        "location": { "type": "string", "description": "City and country" },
+        "region": { "type": "string", "enum": ["Global", "North America", "Europe", "Asia", "Africa", "Latin America", "Oceania"] },
+        "locationType": { "type": "string", "enum": ["USA", "Global", "Virtual"] },
+        "fundingType": { "type": "string", "enum": ["Full", "Partial"] },
+        "field": { "type": "string", "description": "Tech field (AI, Cloud, etc.)" },
+        "startDate": { "type": "string", "format": "date" },
+        "endDate": { "type": "string", "format": "date" },
+        "grantDeadline": { "type": "string", "format": "date" },
+        "grantCoverage": {
+          "type": "object",
+          "properties": {
+            "flight": { "type": "boolean" },
+            "hotel": { "type": "boolean" },
+            "ticket": { "type": "boolean" },
+            "stipend": { "type": "boolean" }
+          }
+        },
+        "applicationUrl": { "type": "string", "format": "uri" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "isHidden": { "type": "boolean", "description": "For Pro users only" },
+        "isComingSoon": { "type": "boolean", "description": "If application is not yet open" },
+        "isVerified": { "type": "boolean", "description": "Whether the opportunity is verified" },
+        "imageUrl": { "type": "string", "format": "uri", "description": "Optional image URL for the conference" }
+      },
+      "required": ["name", "region", "grantDeadline", "applicationUrl", "locationType", "fundingType", "field"]
+    },
+    "Subscription": {
+      "title": "Subscription",
+      "description": "User subscription for alerts.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email" },
+        "regions": { "type": "array", "items": { "type": "string" } },
+        "uid": { "type": "string", "description": "Firebase Auth UID" }
+      },
+      "required": ["email", "uid"]
+    },
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Detailed user profile and preferences for the Bento dashboard.",
+      "type": "object",
+      "properties": {
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string", "format": "uri" },
+        "email": { "type": "string", "format": "email" },
+        "location": { "type": "string" },
+        "primaryGoal": { "type": "string" },
+        "experienceYears": { "type": "number" },
+        "interests": { "type": "array", "items": { "type": "string" } },
+        "impactAreas": { "type": "array", "items": { "type": "string" } },
+        "occupation": { "type": "string", "description": "Job title or student major" },
+        "isPremium": { "type": "boolean" },
+        "aiReviewCount": { "type": "number" },
+        "completionPercentage": { "type": "number" },
+        "weeklyStreaks": { "type": "array", "items": { "type": "boolean" } },
+        "matchesFound": { "type": "number" },
+        "isVerified": { "type": "boolean" },
+        "savedConferences": { "type": "array", "items": { "type": "string" } },
+        "applications": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "conferenceId": { "type": "string" },
+              "status": { "type": "string", "enum": ["Bookmarked", "In Progress", "Applied", "Accepted", "Rejected"] },
+              "updatedAt": { "type": "string", "format": "date-time" },
+              "notes": { "type": "string" }
+            },
+            "required": ["conferenceId", "status", "updatedAt"]
+          }
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "uid": { "type": "string" }
+      },
+      "required": ["uid", "email"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "Community review of a conference.",
+      "type": "object",
+      "properties": {
+        "conferenceId": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "rating": { "type": "number" },
+        "comment": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved", "denied"], "description": "Approval status by admin" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["conferenceId", "userId", "rating", "comment", "status"]
+    },
+    "OpportunitySubmission": {
+      "title": "Opportunity Submission",
+      "description": "A user-submitted conference or grant opportunity.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "applicationUrl": { "type": "string", "format": "uri" },
+        "description": { "type": "string" },
+        "location": { "type": "string" },
+        "region": { "type": "string", "enum": ["Global", "North America", "Europe", "Asia", "Africa", "Latin America", "Oceania"] },
+        "locationType": { "type": "string", "enum": ["USA", "Global", "Virtual"] },
+        "fundingType": { "type": "string", "enum": ["Full", "Partial"] },
+        "field": { "type": "string" },
+        "startDate": { "type": "string", "format": "date" },
+        "endDate": { "type": "string", "format": "date" },
+        "grantDeadline": { "type": "string", "format": "date" },
+        "grantCoverage": {
+          "type": "object",
+          "properties": {
+            "flight": { "type": "boolean" },
+            "hotel": { "type": "boolean" },
+            "ticket": { "type": "boolean" },
+            "stipend": { "type": "boolean" }
+          }
+        },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "submittedBy": { "type": "string", "description": "User UID" },
+        "submitterName": { "type": "string" },
+        "submitterEmail": { "type": "string", "format": "email" },
+        "status": { "type": "string", "enum": ["pending", "approved", "denied"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "applicationUrl", "submittedBy", "status", "location", "region", "grantDeadline", "field"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "User notification.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "type": { "type": "string", "enum": ["new_grant", "deadline_reminder", "system", "admin_alert"] },
+        "isRead": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "message", "type", "isRead"]
+    }
+  },
+  "firestore": {
+    "/conferences/{conferenceId}": {
+      "schema": "Conference",
+      "description": "Collection of tech conferences."
+    },
+    "/subscriptions/{subscriptionId}": {
+      "schema": "Subscription",
+      "description": "User alert subscriptions."
+    },
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profiles and preferences."
+    },
+    "/reviews/{reviewId}": {
+      "schema": "Review",
+      "description": "Community reviews."
+    },
+    "/opportunity_submissions/{submissionId}": {
+      "schema": "OpportunitySubmission",
+      "description": "User-submitted opportunities for review."
+    },
+    "/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "User notifications."
+    }
+  }
+}
