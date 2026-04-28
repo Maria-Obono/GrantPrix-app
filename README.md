@@ -1,12 +1,21 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+<img width="1382" height="768" alt="Screenshot 2026-04-28 at 4 20 56 PM" src="https://github.com/user-attachments/assets/a0ffc606-04bd-483e-8d3a-0b60452b8539" />
+" />
 </div>
 
-# Run and deploy your AI Studio app
+GrantPrix is a smart assistant designed to help tech professionals, students, and researchers discover and track conference travel grants. It simplifies the process of finding funding for global tech events
 
-This contains everything you need to run your app locally.
+## Features
 
-View your app in AI Studio: https://ai.studio/apps/04ea2f29-b6de-43f9-a22d-5344695b9236
+Personalized Recommendations: Get grant suggestions based on your specific interests (AI, Security, Python, etc.) and professional goals.
+
+Real-time Scout: Search for the latest conference grants and travel funding opportunities globally.
+
+Application Tracking: Keep track of deadlines and the status of your applications in one place.
+
+Grant Assistant: Use AI-powered insights to check your eligibility and improve your application essays.
+
+Live Verification: Automatically verify if a grant's application window is currently open.
 
 ## Run Locally
 
@@ -15,6 +24,11 @@ View your app in AI Studio: https://ai.studio/apps/04ea2f29-b6de-43f9-a22d-53446
 
 1. Install dependencies:
    `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
+2. Run the app:
    `npm run dev`
+3. A Firebase project setup.
+
+<img width="977" height="795" alt="Screenshot 2026-04-28 at 4 25 39 PM" src="https://github.com/user-attachments/assets/57e5f7f5-a59e-4866-9b36-cea20ce7cdab" />
+<img width="452" height="782" alt="Screenshot 2026-04-28 at 4 21 45 PM" src="https://github.com/user-attachments/assets/4c3df2fb-6bbb-44d8-9705-94d24e57ee02" />
+<img width="1243" height="768" alt="Screenshot 2026-04-28 at 4 21 24 PM" src="https://github.com/user-attachments/assets/b50a2c4d-bfc2-4b9f-be22-a610894d7613" />
+
