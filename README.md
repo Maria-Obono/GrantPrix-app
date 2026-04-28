@@ -1,6 +1,6 @@
 <div align="center">
 <img width="1382" height="768" alt="Screenshot 2026-04-28 at 4 20 56 PM" src="https://github.com/user-attachments/assets/a0ffc606-04bd-483e-8d3a-0b60452b8539" />
-" />
+
 </div>
 
 GrantPrix is a smart assistant designed to help tech professionals, students, and researchers discover and track conference travel grants. It simplifies the process of finding funding for global tech events
@@ -28,7 +28,6 @@ Live Verification: Automatically verify if a grant's application window is curre
    `npm run dev`
 3. A Firebase project setup.
 
-<img width="977" height="795" alt="Screenshot 2026-04-28 at 4 25 39 PM" src="https://github.com/user-attachments/assets/57e5f7f5-a59e-4866-9b36-cea20ce7cdab" />
-<img width="452" height="782" alt="Screenshot 2026-04-28 at 4 21 45 PM" src="https://github.com/user-attachments/assets/4c3df2fb-6bbb-44d8-9705-94d24e57ee02" />
 <img width="1243" height="768" alt="Screenshot 2026-04-28 at 4 21 24 PM" src="https://github.com/user-attachments/assets/b50a2c4d-bfc2-4b9f-be22-a610894d7613" />
 
+<img width="977" height="795" alt="Screenshot 2026-04-28 at 4 25 39 PM" src="https://github.com/user-attachments/assets/57e5f7f5-a59e-4866-9b36-cea20ce7cdab" />
