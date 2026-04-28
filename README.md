@@ -1,5 +1,5 @@
 <div align="center">
-<img width="1382" height="768" alt="Screenshot 2026-04-28 at 4 20 56 PM" style="margin-right: 20px;" src="https://github.com/user-attachments/assets/a0ffc606-04bd-483e-8d3a-0b60452b8539" />
+<img width="1382" height="768" alt="Screenshot 2026-04-28 at 4 20 56 PM" style="margin-right: 200px;" src="https://github.com/user-attachments/assets/a0ffc606-04bd-483e-8d3a-0b60452b8539" />
 </div>
 
 
@@ -28,7 +28,7 @@ Live Verification: Automatically verify if a grant's application window is curre
    `npm run dev`
 3. A Firebase project setup.
 
-<img width="1243" height="768" alt="Screenshot 2026-04-28 at 4 21 24 PM" style="margin-right: 20px;" src="https://github.com/user-attachments/assets/b50a2c4d-bfc2-4b9f-be22-a610894d7613" />
+<img width="1243" height="768" alt="Screenshot 2026-04-28 at 4 21 24 PM" style="margin-right: 200px;" src="https://github.com/user-attachments/assets/b50a2c4d-bfc2-4b9f-be22-a610894d7613" />
 
 
 
