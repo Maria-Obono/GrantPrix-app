@@ -17,6 +17,16 @@ Grant Assistant: Use AI-powered insights to check your eligibility and improve y
 
 Live Verification: Automatically verify if a grant's application window is currently open.
 
+## Tech Stack
+
+Frontend: React / Vite
+
+Backend & Database: Firebase (Auth, Firestore)
+
+AI Engine: Google Gemini API
+
+Styling: Tailwind CSS
+
 ## Run Locally
 
 **Prerequisites:**  Node.js
